@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+  }
+
+  h1 {
+    text-align: center;
+    color: #333;
+  }
+
+  form {
+    max-width: 400px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #fff;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+  }
+
+  input[type="text"], input[type="tel"], input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+
+  button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+    background-color: #fff;
+  }
+
+  table, th, td {
+    border: 1px solid #ccc;
+  }
+
+  th, td {
+    padding: 8px;
+    text-align: left;
+  }
+  </style>
+<title>Registrar Socios</title>
+</head>
+<body>
+  <h1>Registrar Socios</h1>
+  <form id="registroForm">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" required>
+
+    <label for="direccion">Dirección:</label>
+    <input type="text" id="direccion" required>
+
+    <label for="idn">DNI:</label>
+    <input type="text" id="idn" required>
+
+    <label for="telefono">Teléfono:</label>
+    <input type="tel" id="telefono" required>
+
+    <label for="fecha">Fecha:</label>
+    <input type="date" id="fecha" required>
+
+    <button type="button" id="guardar">Guardar</button>
+  </form>
+
+  <table id="tablaRegistros">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Dirección</th>
+        <th>DNI</th>
+        <th>Teléfono</th>
+        <th>Fecha</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById('registroForm');
+    const tabla = document.getElementById('tablaRegistros');
+    const tbody = tabla.querySelector('tbody');
+    const guardarBtn = document.getElementById('guardar');
+
+    guardarBtn.addEventListener('click', () => {
+      const nombre = document.getElementById('nombre').value;
+      const direccion = document.getElementById('direccion').value;
+      const idn = document.getElementById('idn').value;
+      const telefono = document.getElementById('telefono').value;
+      const fecha = document.getElementById('fecha').value;
+
+      // Validar que todos los campos estén completos
+      if (!nombre || !direccion || !idn || !telefono || !fecha) {
+        alert('Por favor, completa todos los campos.');
+        return;
+      }
+
+      const newRow = tbody.insertRow();
+      newRow.innerHTML = `
+        <td>${nombre}</td>
+        <td>${direccion}</td>
+        <td>${idn}</td>
+        <td>${telefono}</td>
+        <td>${fecha}</td>
+      `;
+
+      // Limpiar campos después de guardar
+      form.reset();
+
+      // Almacenar los datos en el almacenamiento local
+      const data = {
+        nombre,
+        direccion,
+        idn,
+        telefono,
+        fecha
+      };
+
+      const storedData = JSON.parse(localStorage.getItem('registros')) || [];
+      storedData.push(data);
+      localStorage.setItem('registros', JSON.stringify(storedData));
+    });
+
+    // Cargar datos almacenados al cargar la página
+    const storedData = JSON.parse(localStorage.getItem('registros')) || [];
+    storedData.forEach(data => {
+      const newRow = tbody.insertRow();
+      newRow.innerHTML = `
+        <td>${data.nombre}</td>
+        <td>${data.direccion}</td>
+        <td>${data.idn}</td>
+        <td>${data.telefono}</td>
+        <td>${data.fecha}</td>
+      `;
+
+     
+    });
+  </script>
+</body>
+</html>
